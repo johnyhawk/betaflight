@@ -139,7 +139,7 @@ STATIC_UNIT_TESTED vtxSettingsConfig_t vtxGetSettings(void)
 
 static bool vtxProcessBandAndChannel(vtxDevice_t *vtxDevice)
 {
-    if (!ARMING_FLAG(ARMED)) {
+    if (!ARMING_FLAG(ARMED) || 1) {
         uint8_t vtxBand;
         uint8_t vtxChan;
         if (vtxCommonGetBandAndChannel(vtxDevice, &vtxBand, &vtxChan)) {
@@ -156,7 +156,7 @@ static bool vtxProcessBandAndChannel(vtxDevice_t *vtxDevice)
 #if defined(VTX_SETTINGS_FREQCMD)
 static bool vtxProcessFrequency(vtxDevice_t *vtxDevice)
 {
-    if (!ARMING_FLAG(ARMED)) {
+    if (!ARMING_FLAG(ARMED) || 1) {
         uint16_t vtxFreq;
         if (vtxCommonGetFrequency(vtxDevice, &vtxFreq)) {
             const vtxSettingsConfig_t settings = vtxGetSettings();
@@ -277,7 +277,7 @@ void vtxUpdate(timeUs_t currentTimeUs)
             currentSchedule = (currentSchedule + 1) % VTX_PARAM_COUNT;
         } while (!vtxUpdatePending && currentSchedule != startingSchedule);
 
-        if (!ARMING_FLAG(ARMED) || vtxUpdatePending) {
+        if (1 || vtxUpdatePending) {
             vtxCommonProcess(vtxDevice, currentTimeUs);
         }
     }
