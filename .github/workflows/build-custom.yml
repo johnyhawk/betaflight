@@ -1,0 +1,28 @@
+name: Build Custom Hex
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - vtx-d1-patch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: betaflight/betaflight-build:latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Compile Target
+        run: |
+          make TARGET=HOBBYWING_XROTORF7CONV
+
+      - name: Upload Hex Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: betaflight_HOBBYWING_XROTORF7CONV
+          path: obj/betaflight_*.hex
