@@ -15,14 +15,10 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install ARM Toolchain and Build Tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gcc-arm-none-eabi binutils-arm-none-eabi libnewlib-arm-none-eabi make
-
-      - name: Compile Target
-        run: |
-          make TARGET=HOBBYWING_XROTORF7CONV
+      - name: Build Firmware
+        uses: betaflight/compile-action@v1
+        with:
+          target: HOBBYWING_XROTORF7CONV
 
       - name: Upload Hex Artifact
         uses: actions/upload-artifact@v4
