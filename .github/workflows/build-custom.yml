@@ -28,11 +28,25 @@ jobs:
           curl -sSL "https://developer.arm.com/-/media/Files/downloads/gnu/13.3.rel1/binrel/arm-gnu-toolchain-13.3.rel1-x86_64-arm-none-eabi.tar.xz" | sudo tar -xJ -C /opt/arm-gcc --strip-components=1
           echo "/opt/arm-gcc/bin" >> $GITHUB_PATH
 
+      - name: Inject Navigation and GPS Features into Target Config
+        run: |
+          cat << 'CONFIG_EOF' >> src/config/configs/HOWI/HOBBYWING_XROTORF7CONV/config.h
+          #define USE_GPS
+          #define USE_GPS_RESCUE
+          #define USE_GPS_UBLOX
+          #define USE_GPS_NMEA
+          #define USE_MAG
+          #define USE_MAG_QMC5883
+          #define USE_NAV
+          #define USE_ALTITUDE_HOLD
+          #define USE_POSITION_HOLD
+          CONFIG_EOF
+
       - name: Compile Target
         run: |
           export PATH="/opt/arm-gcc/bin:$PATH"
           arm-none-eabi-gcc --version
-          make HOBBYWING_XROTORF7CONV OPTIONS="GPS MAG"
+          make HOBBYWING_XROTORF7CONV
 
       - name: Upload Hex Artifact
         uses: actions/upload-artifact@v4
