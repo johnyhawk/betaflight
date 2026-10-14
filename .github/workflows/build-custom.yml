@@ -16,22 +16,24 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
-      - name: Setup Tools & Compiler
+      - name: Install Prerequisites
         run: |
           sudo apt-get update
-          sudo apt-get install -y make curl tar bzip2 xz-utils python3 python3-pip
+          sudo apt-get install -y make curl tar xz-utils python3 python3-pip
           pip3 install jinja2 pyyaml
-          # Download official Arm GNU Toolchain 10.3 (standard for Betaflight STM32F7 builds)
-          curl -sSL "https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.10/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2" | tar -xj -C /opt
-          echo "/opt/gcc-arm-none-eabi-10.3-2021.10/bin" >> $GITHUB_PATH
+
+      - name: Install Required Arm Toolchain
+        run: |
+          make arm_sdk_install
+          echo "$HOME/opt/gcc-arm-none-eabi/bin" >> $GITHUB_PATH
 
       - name: Compile Target
         run: |
-          export PATH="/opt/gcc-arm-none-eabi-10.3-2021.10/bin:$PATH"
+          export PATH="$HOME/opt/gcc-arm-none-eabi/bin:$PATH"
           arm-none-eabi-gcc --version
           make HOBBYWING_XROTORF7CONV
 
-      - name: Locate & Upload Hex Artifact
+      - name: Upload Hex Artifact
         uses: actions/upload-artifact@v4
         with:
           name: betaflight_HOBBYWING_XROTORF7CONV
