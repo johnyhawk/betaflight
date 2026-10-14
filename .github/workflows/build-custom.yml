@@ -32,7 +32,7 @@ jobs:
         run: |
           export PATH="/opt/arm-gcc/bin:$PATH"
           arm-none-eabi-gcc --version
-          make HOBBYWING_XROTORF7CONV OPTIONS="GPS GPS_RESCUE GPS_UBLOX GPS_NMEA MAG MAG_QMC5883 ALTITUDE_HOLD POSITION_HOLD AUTONOMOUS_FLIGHT"
+          make HOBBYWING_XROTORF7CONV OPTIONS="GPS MAG"
 
       - name: Upload Hex Artifact
         uses: actions/upload-artifact@v4
