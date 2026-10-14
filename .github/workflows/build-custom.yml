@@ -8,17 +8,31 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           submodules: recursive
+          fetch-depth: 0
 
-      - name: Set up Arm GNU Toolchain
-        uses: carlosperate/arm-none-eabi-gcc-action@v1
-        with:
-          release: '10.3-2021.10'
+      - name: Install Build Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            gcc-arm-none-eabi \
+            libnewlib-arm-none-eabi \
+            python3 \
+            python3-pip \
+            python3-jinja2 \
+            python3-yaml \
+            ruby \
+            ninja-build
+
+      - name: Show Compiler Version
+        run: |
+          arm-none-eabi-gcc --version
 
       - name: Compile Target
         run: |
@@ -26,6 +40,7 @@ jobs:
 
       - name: Upload Hex Artifact
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: betaflight_HOBBYWING_XROTORF7CONV
-          path: obj/betaflight_*.hex
+          path: obj/*.hex
