@@ -28,11 +28,24 @@ jobs:
           curl -sSL "https://developer.arm.com/-/media/Files/downloads/gnu/13.3.rel1/binrel/arm-gnu-toolchain-13.3.rel1-x86_64-arm-none-eabi.tar.xz" | sudo tar -xJ -C /opt/arm-gcc --strip-components=1
           echo "/opt/arm-gcc/bin" >> $GITHUB_PATH
 
-      - name: Compile Target
+      - name: Compile Target with Full Nav & OSD Support
         run: |
           export PATH="/opt/arm-gcc/bin:$PATH"
           arm-none-eabi-gcc --version
-          make HOBBYWING_XROTORF7CONV
+          make HOBBYWING_XROTORF7CONV EXTRA_FLAGS="\
+            -DUSE_GPS \
+            -DUSE_GPS_RESCUE \
+            -DUSE_GPS_NMEA \
+            -DUSE_GPS_UBLOX \
+            -DUSE_MAG \
+            -DUSE_MAG_QMC5883 \
+            -DUSE_BARO \
+            -DUSE_BARO_DPS310 \
+            -DUSE_OSD \
+            -DUSE_MAX7456 \
+            -DUSE_ALTITUDE_HOLD \
+            -DUSE_POSITION_HOLD \
+            -DUSE_AUTONOMOUS_FLIGHT"
 
       - name: Upload Hex Artifact
         uses: actions/upload-artifact@v4
