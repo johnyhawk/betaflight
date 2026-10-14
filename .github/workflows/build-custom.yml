@@ -8,20 +8,24 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           submodules: recursive
 
-      - name: Build Firmware
-        uses: betaflight/compile-action@v1
+      - name: Set up Arm GNU Toolchain
+        uses: carlosperate/arm-none-eabi-gcc-action@v1
         with:
-          target: HOBBYWING_XROTORF7CONV
+          release: '10.3-2021.10'
+
+      - name: Compile Target
+        run: |
+          make TARGET=HOBBYWING_XROTORF7CONV
 
       - name: Upload Hex Artifact
         uses: actions/upload-artifact@v4
         with:
           name: betaflight_HOBBYWING_XROTORF7CONV
-          path: obj/*.hex
+          path: obj/betaflight_*.hex
