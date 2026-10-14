@@ -22,14 +22,15 @@ jobs:
           sudo apt-get install -y make curl tar xz-utils python3 python3-pip
           pip3 install jinja2 pyyaml
 
-      - name: Install Required Arm Toolchain
+      - name: Install Arm GNU Toolchain 13.3.rel1
         run: |
-          make arm_sdk_install
-          echo "$HOME/opt/gcc-arm-none-eabi/bin" >> $GITHUB_PATH
+          sudo mkdir -p /opt/arm-gcc
+          curl -sSL "https://developer.arm.com/-/media/Files/downloads/gnu/13.3.rel1/binrel/arm-gnu-toolchain-13.3.rel1-x86_64-arm-none-eabi.tar.xz" | sudo tar -xJ -C /opt/arm-gcc --strip-components=1
+          echo "/opt/arm-gcc/bin" >> $GITHUB_PATH
 
       - name: Compile Target
         run: |
-          export PATH="$HOME/opt/gcc-arm-none-eabi/bin:$PATH"
+          export PATH="/opt/arm-gcc/bin:$PATH"
           arm-none-eabi-gcc --version
           make HOBBYWING_XROTORF7CONV
 
